@@ -5,7 +5,6 @@ import os
 import sys
 # import cube2
 import getzen
-import getweight5
 import profrest5
 import json
 import codecs
@@ -44,11 +43,11 @@ def Nightproc(indir, outdir, parfile):
 
     # Compute zenith distance
     for f in files:
-        data = profrest5.read_json(outdir+f)
+        data = profrest5.read_json(outdir + f)
         hr = data["cubepar"]["star"] 
-        star = getzen.getstar(hr,starcat)
+        star = getzen.getstar(hr, starcat)
         if star[0] > 0:
-            starpar = getzen.getstarpar(par,data,star,hr)
+            starpar = getzen.getstarpar(par, data, star, hr)
         # print(starpar)
         else:
             starpar='none'

@@ -5,11 +5,6 @@
 # data = {'image': {'impar': impar, 'noisepar': noisepar}, 'moments': moment
 # cubepar = {'nx': nx,'nz':nz,'texp':texp,'gain':gain,'date':DATE,'star':star}
 
-import json 
-import codecs
-import numpy as np
-import matplotlib.pyplot as plt
-import getweight5
 import getzen
 import profrest5
 import sys
@@ -66,10 +61,10 @@ def readstm(par, fname):
         if (tag == 'M'):
             data = parseM(list,cubepar)
             hr = data["cubepar"]["star"] 
-            star = getzen.getstar(hr,starcat)
+            star = getzen.getstar(hr, starcat)
             #  Compute zenith distance
             if star[0] > 0:
-                starpar = getzen.getstarpar(par,data,star,hr)   
+                starpar = getzen.getstarpar(par, data, star, hr)
             else:
                 starpar='none'
             data["starpar"] = starpar

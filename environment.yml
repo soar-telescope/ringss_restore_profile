@@ -1,0 +1,13 @@
+name: rings_restore_profile
+dependencies:
+  - astropy
+  - matplotlib
+  - numpy
+  - pandas
+  - pip
+  - scipy
+  - pip:
+      - ccdproc
+      - coveralls
+      - sphinx_rtd_theme
+      - sphinx
