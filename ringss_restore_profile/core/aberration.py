@@ -28,7 +28,7 @@ def aberresp(par):
     pixel = par["telescope"]["pixel"]
     lam = 0.6e-6   #  600nm fixed
 
-    img0, radpix = getimage.getimage(d,eps,pdist,lam,pixel) # image array and ring radius in pixels
+    img0, radpix = getimage.getimage(d, eps, pdist, lam, pixel) # image array and ring radius in pixels
     nx =img0.shape[0]
     print("Image size, ring radius [pix]: ",nx, radpix)
         
@@ -87,7 +87,7 @@ def aberresp(par):
 
     for i in range(0,nz): # Main loop over 7 aberrations
         # image array and ring radius in pixels for i-th aberration
-        img, rad = getimage.getimage(d,eps,pdist,lam,pixel, [zn[i]],[zampl]) 
+        img, rad = getimage.getimage(d, eps, pdist, lam, pixel, [zn[i]], [zampl])
   
         c = np.dot(maskmat,np.ndarray.flatten(img)) # coefs before centering
         radii = c[0:nsect]/c[nsect:2*nsect]

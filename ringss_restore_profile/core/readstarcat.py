@@ -18,7 +18,7 @@ for line in junk:
     cat[t[0]] = t[1:5]
 
 try:
-    json.dump(cat,codecs.open('starcat.json', 'w', encoding='utf-8'), separators=(',',':'))
+    json.dump(cat, codecs.open('../data/starcat.json', 'w', encoding='utf-8'), separators=(',', ':'))
 except error as err:
     print("Error in saving starcat.json")
 print("Saved  starcat.json")
