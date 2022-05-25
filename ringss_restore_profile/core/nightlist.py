@@ -5,19 +5,10 @@ import sys
 import os
 import json
 
+from .core import read_json
 
-# read a json file, return a dictionary; returns None if fails
-def read_json(filename):
-    try:
-        file = open(filename, "r")
-        p = json.load(file)  
-        file.close()
-        return p
-    except FileNotFoundError as err:
-        print(err)
-        return
 
-    # ### Main module. usage: > python <par> <data>
+# ### Main module. usage: > python <par> <data>
 # ---------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:

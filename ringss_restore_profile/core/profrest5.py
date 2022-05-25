@@ -6,17 +6,8 @@ import json
 import codecs
 import sys
 
+from .core import read_json
 
-# read a json file, return a dictionary; returns None if fails
-def read_json(filename):
-    try:
-        file = open(filename, "r")
-        p = json.load(file)
-        file.close()
-        return p
-    except FileNotFoundError as err:
-        print(err)
-        return
 
 
 # Profile restoration. Inputs: dictionaries of parameters, data, weights, and Z-matrix
