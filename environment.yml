@@ -1,4 +1,4 @@
-name: rings_restore_profile
+name: ringss_restore_profile
 dependencies:
   - astropy
   - matplotlib
@@ -11,3 +11,5 @@ dependencies:
       - coveralls
       - sphinx_rtd_theme
       - sphinx
+      - tox
+      - flake8
