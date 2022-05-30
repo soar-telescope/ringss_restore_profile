@@ -253,7 +253,7 @@ def cubeproc(file, indir, outdir):
     # Save the average image
     try:
         fits.writeto(outdir+basename+'_av.fits', imav, hdr, overwrite=True)
-    except OsError as err:
+    except OSError as err:
         print(err)    
 
     # Save the data dictionary and return its name

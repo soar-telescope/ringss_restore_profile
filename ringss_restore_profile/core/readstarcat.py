@@ -19,7 +19,7 @@ for line in junk:
 
 try:
     json.dump(cat, codecs.open('../data/starcat.json', 'w', encoding='utf-8'), separators=(',', ':'))
-except error as err:
+except FileNotFoundError as err:
     print("Error in saving starcat.json")
 print("Saved  starcat.json")
 
