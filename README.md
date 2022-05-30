@@ -23,7 +23,7 @@ Starting from code5.tar.gz from Andrei Tokovinin email
 4) starcat.json: added from Andrei's email May 28, 2021
 5) zmat.json: matrix constant
 
-Notes:
+Moved to legacy folder:
 1) **test9b.py**: it **IS** actually asi290mm_imageacq project
 2) **cube2.py**: it is **IN** asi290mm_imageacq
 
