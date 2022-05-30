@@ -1,7 +1,7 @@
 import json
 
 
-def read_json(filename):
+def read_json(filename: str):
     """Utility function to read json files
 
     Args:
@@ -12,10 +12,10 @@ def read_json(filename):
 
     """
     try:
-        file = open(filename, "r")
-        p = json.load(file)
-        file.close()
-        return p
+        with open(filename, "r") as fp:
+            data = json.load(fp=fp)
+            return data
     except FileNotFoundError as err:
         print(err)
+        # log.error(str(error)
         return None
