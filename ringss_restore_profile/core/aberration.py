@@ -7,16 +7,9 @@ import codecs
 import sys
 import getimage
 
-# read a json file, return a dictionary; returns None if fails
-def read_json(filename):
-    try:
-        file = open(filename, "r")
-        p = json.load(file)  
-        file.close()
-        return p
-    except FileNotFoundError as err:
-        print(err)
-        return
+from .core import read_json
+
+
 
 # Find response to 7 aberrations (focus to trefoil)
 # Returns list of 7 numbers

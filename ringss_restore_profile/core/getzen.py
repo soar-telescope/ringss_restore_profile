@@ -9,16 +9,7 @@ import json
 import codecs
 import sys
 
-
-# read a json file, return a dictionary; returns None if fails
-def read_json(filename):
-    try:
-        file = open(filename, "r")
-        p = json.load(file)  # par is a nested dictionary
-        file.close()
-        return p
-    except FileNotFoundError as err:
-        print(err)
+from .core import read_json
 
 
 # Correct the date format to isot, if necessary
