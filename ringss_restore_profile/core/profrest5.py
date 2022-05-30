@@ -33,7 +33,7 @@ def Restore(par, data, weight, zmat):
 
     # interpolate weight to the Z0 grid, trim to mmax
     cosz = np.cos(zen / 180 * np.pi)  # cos(z)
-    mmax = 17  # hard-coded number of terms to use
+    mmax = 15  # hard-coded number of terms to use
     nz0 = len(z0)
     z00 = np.array(z0) / cosz  # stretched array of nominal heights
     wt1 = np.zeros((nz0, mmax))  # interpolated and trimmed weights
@@ -69,7 +69,7 @@ def Restore(par, data, weight, zmat):
     cov1 = np.array(cov[1:mmax + 1], float)
     rho = cov1 / var1
     varcorr = var1 / (0.8 + 0.2 * rho)  # correction for finite exposure time
-    totvar = np.sum(np.array(var, float))  # full scintillation power
+    totvar = np.sum(np.array(var, float))  # full scintillation power, incl. noise
 
     # Z-matrix correction. Avoid negative values!
     z1 = np.array(zmat)
@@ -79,10 +79,11 @@ def Restore(par, data, weight, zmat):
 
     # weighted nnls. Weight is proportional to 1/var (before noise subtraction, non-negative)
     varwt = np.power(np.array(var[1:mmax + 1], float), -1)
+    # varwt = np.power(np.array(var[1:mmax+1],float), -0.5)
     a2 = np.transpose(wt1.copy())  # matrix of (mmax-1,nz) dimension
-    for i in range(0, mmax):
+    for i in range(0, mmax):  # weighted system matrix
         a2[i, :] *= varwt[i]
-    varz2 = varz * varwt
+    varz2 = varz * varwt  # weighted right-hand vector
     prof, resvar = optimize.nnls(a2, varz2)  # turbulence intergals in  [m^1/3] in z0 layers
 
     varmod = np.dot(a2, prof) / varwt
@@ -117,10 +118,12 @@ def Restore(par, data, weight, zmat):
     delta = (var1 - cov1) * (texp ** (-2))
     delta = delta * (delta > 0)
     ucoef = np.array(weight["ucoef0"]) + bv * np.array(weight["ucoefslope"])
-    umm = weight["umm"]
+    umm = np.array(weight["umm"], int) - 1
     delta = np.array(delta[umm])
+    # print(delta)  # debugging
     v2mom = np.sum(ucoef * delta)
-    jwind = np.sum(prof[1:nz0])  # exclude ground layer, the speed is not zen-corrected
+    jwind = np.sum(prof[2:nz0])  # exclude ground layer, the speed is not zen-corrected
+    #    jwind = np.sum(prof[1:nz0])  # exclude ground layer, the speed is not zen-corrected
     v2 = pow(v2mom / jwind, 0.5)  # use profile uncorrected for zenith
     print("Wind speed [m/s]: {:.3f}".format(v2))
 

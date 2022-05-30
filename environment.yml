@@ -13,3 +13,4 @@ dependencies:
       - sphinx
       - tox
       - flake8
+      - zernike

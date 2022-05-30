@@ -19,6 +19,7 @@
 # returns wt[nz,mmax+1] - weights in m^(-1/3), m=0 is for sector variance in (lam/D)
 # and ufunc[nz,mmax+1] - U-functions for wind-speed calculation 
 
+import sys
 import numpy as np
 import zernike
 
