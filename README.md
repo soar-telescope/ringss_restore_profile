@@ -1,6 +1,8 @@
 # RINGSS Restore Profile
 [![RINGSS Restore Profile](https://github.com/soar-telescope/ringss_restore_profile/actions/workflows/python-package.yml/badge.svg)](https://github.com/soar-telescope/ringss_restore_profile/actions/workflows/python-package.yml)
 [![Upload to PYPI](https://github.com/soar-telescope/ringss_restore_profile/actions/workflows/python-publish.yml/badge.svg)](https://github.com/soar-telescope/ringss_restore_profile/actions/workflows/python-publish.yml)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/soar-telescope/ringss_restore_profile.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/soar-telescope/ringss_restore_profile/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/soar-telescope/ringss_restore_profile.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/soar-telescope/ringss_restore_profile/context:python)
 
 ## Overview
 
