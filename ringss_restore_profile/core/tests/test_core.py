@@ -3,7 +3,7 @@ import os
 
 from unittest import TestCase
 
-from ..core import read_json
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 class TestReadJsonFile(TestCase):

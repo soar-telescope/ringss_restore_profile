@@ -7,7 +7,7 @@ import codecs
 import sys
 import getimage
 
-from .core import read_json
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 

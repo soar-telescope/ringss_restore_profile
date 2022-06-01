@@ -6,4 +6,5 @@ numpy
 pandas
 scipy
 Sphinx
+h5py
 zernike

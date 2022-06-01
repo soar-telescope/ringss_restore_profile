@@ -1,25 +1,24 @@
 # coding: utf-8
 
+import sys
 import numpy as np
 from scipy import optimize
 import json
 import codecs
-import sys
 
-from .core import read_json
-
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 # Profile restoration. Inputs: dictionaries of parameters, data, weights, and Z-matrix
 # Output: dictionary of profile parameters
-# Before calling Restore, run getzen.py to define the zenith distance and star color in data
+# Before calling restore(), run getzen.py to define the zenith distance and star color in data
 #
-def Restore(par, data, weight, zmat):
+def restore(par: dict, data: dict, weight: dict, zmat: dict) -> dict:
     #    print(data["image"]["impar"])
     var = data["moments"]["var"]  # variance of a-coefficients
     cov = data["moments"]["cov"]  # covariance of a-coefficients
-    impar = data["image"]["impar"]  # ring parameters
-    noisepar = data["image"]["noisepar"]  # noise parameters
+    # impar = data["image"]["impar"]  # ring parameters
+    # noisepar = data["image"]["noisepar"]  # noise parameters
     starpar = data["starpar"]  # star parameters
     zen = starpar["zen"]
     bv = starpar["BV"]
@@ -27,7 +26,7 @@ def Restore(par, data, weight, zmat):
 
     z = np.array(weight["z"])  # nominal distance grid of weights
     nz = len(weight["z"])  # number of layers in weights
-    nm = len(weight["wt0"][0])  # number of coefficints per layer
+    nm = len(weight["wt0"][0])  # number of coefficients per layer
     wt = np.reshape(np.array(weight["wt0"]), (nz, nm))  # wt.shape = (16,21)
     wt += bv * np.reshape(np.array(weight["wtslope"]), (nz, nm))  # must be >0!
 
@@ -84,7 +83,7 @@ def Restore(par, data, weight, zmat):
     for i in range(0, mmax):  # weighted system matrix
         a2[i, :] *= varwt[i]
     varz2 = varz * varwt  # weighted right-hand vector
-    prof, resvar = optimize.nnls(a2, varz2)  # turbulence intergals in  [m^1/3] in z0 layers
+    prof, resvar = optimize.nnls(a2, varz2)  # turbulence integrals in  [m^1/3] in z0 layers
 
     varmod = np.dot(a2, prof) / varwt
     erms = np.std(1. - varmod / varz)
@@ -108,8 +107,8 @@ def Restore(par, data, weight, zmat):
     rvarnorm = rvar * pow(pixel / lamd, 2)  # variance in (lam/D^2) units
 
     wcoef = np.sum(wtsect * prof) / np.sum(prof)  # profile-adjusted weight of sector variance
-    jtot2 = rvarnorm / wcoef / 4  # turbulence intergal, m^1/3. Explain factor 4!
-    see2 = pow(jtot2 * cosz / seeconst, 0.6)  # seeing at zenith, arcsec
+    jtot2 = rvarnorm / wcoef / 4  # turbulence integral, m^1/3. Explain factor 4!
+    see2 = pow(jtot2 * cosz / seeconst, 0.6)  # seeing at zenith, arcsecs
     see2 *= 1. / (1. - 0.4 * totvar)  # saturation correction
     print("Seeing (sect,tot,FA): {:.3f} {:.3f} {:.3f}".format(see2, see, fsee))
 
@@ -136,10 +135,10 @@ def Restore(par, data, weight, zmat):
     heff = pow(np.sum(tmp * prof1) / np.sum(prof1), 0.6)
     theta0 = 205265. * 0.31 * r0 / heff
     # Output dictionary
-    profile = {"z0": z0, "prof": prof1.tolist(), "see": see, "fsee": fsee, "see2": see2, "wind": v2, "erms": erms,
-               "totvar": totvar, "tau0": tau0, "theta0": theta0}
+    profile_dict = {"z0": z0, "prof": prof1.tolist(), "see": see, "fsee": fsee, "see2": see2, "wind": v2, "erms": erms,
+                    "totvar": totvar, "tau0": tau0, "theta0": theta0}
 
-    return profile
+    return profile_dict
 
 
 # ### Main module. usage: > python <par> <data>
@@ -153,31 +152,32 @@ if __name__ == "__main__":
     # print("Parameter file: " + parfile)
     datafile = sys.argv[2]
     # Ingest all information needed
-    par = read_json(parfile)
-    if par == None:
-        sys.exit()
-    weight = read_json(par["profrest"]["weightfile"])
-    zmat = read_json(par["profrest"]["zmat"])
-    data = read_json(datafile)
-    if data == None:
+    parameters = read_json(parfile)
+    if parameters is None:
         sys.exit()
 
-    profile = Restore(par, data, weight, zmat)
-    if profile == None:
+    weights = read_json(parameters["profrest"]["weightsfile"])
+    zmatrix = read_json(parameters["profrest"]["zmat"])
+    data_dict = read_json(datafile)
+    if data_dict is None:
+        sys.exit()
+
+    profile = restore(parameters, data_dict, weights, zmatrix)
+    if profile is None:
         print("Restoration failed!")
         sys.exit()
 
-    data["profile"] = profile  # add to the data dictionary
-    json.dump(data, codecs.open(datafile, 'w', encoding='utf-8'), separators=(',', ':'))
+    data_dict["profile"] = profile  # add to the data dictionary
+    json.dump(data_dict, codecs.open(datafile, 'w', encoding='utf-8'), separators=(',', ':'))
     print("Profile is saved in " + datafile)
 
     # Output profile
-    prof = profile["prof"]  # integrals in 1e-13 m^1/4
-    z0 = profile["z0"]  # heights in m
+    prof_integrals = profile["prof"]  # integrals in 1e-13 m^1/4
+    z0_heights = profile["z0"]  # heights in m
     s = s1 = ""  # print profile in readable form, in 10^(-13) units
-    for x in prof:
+    for x in prof_integrals:
         s += " {:.2f}".format(x)
-    for x in z0:
+    for x in z0_heights:
         s1 += " {:.2f}".format(x * 1e-3)
     print(s1)
     print(s)

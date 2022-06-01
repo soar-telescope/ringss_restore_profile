@@ -25,6 +25,7 @@ Starting from code5.tar.gz from Andrei Tokovinin email
 3) profrest5.py: updated from Andrei's email at May 20, 2022
 4) starcat.json: added from Andrei's email May 28, 2021
 5) zmat.json: matrix constant
+6) getweight5.py: renamed to getweights.py
 
 Moved to legacy folder:
 1) **test9b.py**: it **IS** actually asi290mm_imageacq project
@@ -34,7 +35,7 @@ Moved to legacy folder:
 1) zernike package, done.
 2) h5py required by zernike, done.
 
-### Running profile restoration
+### Running profile restoration 
 #### Parameters file par-*.json
 par-tololo.json is the initial parameters file provided by Andrei 
 It needs to be modified to use site parameters,  
@@ -46,7 +47,7 @@ The file is created by getweight5.py
 
 These are the weights used by profrest5.py 
 
-*[ebustos@localhost pythonProject]$ python3 getweight5.py par-tololo.json*
+*[ebustos@localhost pythonProject]$ python3 getweights.py par-tololo.json*
 
 #### zmat.json
 This is a "constant". It is an empirical model that depends on the optics used (telescope)
