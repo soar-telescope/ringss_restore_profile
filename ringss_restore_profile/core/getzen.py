@@ -1,20 +1,18 @@
 # coding: utf-8
 
 # ### Zenith distance and JD calculation. May 27, 2021, AT
-
+import sys
 from astropy.time import Time
 from astropy import units as u
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 import json
 import codecs
-import sys
-
-from .core import read_json
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 # Correct the date format to isot, if necessary
-def datecorrect(datein):
-    tmp = datein.partition('T')  # before, T, after
+def datecorrect(date_in):
+    tmp = date_in.partition('T')  # before, T, after
     if tmp[0][4] == '.':  # replace . by -
         t = tmp[0][0:4] + "-" + tmp[0][5:7] + "-" + tmp[0][8:10]
     else:
@@ -23,10 +21,10 @@ def datecorrect(datein):
     return date
 
 
-# Find star by HR number in the catalog, returms list (ra,dec,v,b-v), 0 if not found; hr is a string
-def getstar(hr, starcat):
+# Find star by HR number in the catalog, returns list (ra,dec,v,b-v), 0 if not found; hr is a string
+def get_star(hr_number, starcat):
     try:
-        star = starcat[hr]  # list of 4 steings
+        star = starcat[hr_number]  # list of 4 strings
         for i in range(0, 4):
             star[i] = float(star[i])
     except:
@@ -36,8 +34,8 @@ def getstar(hr, starcat):
 
 
 # compute JD and zenith distance
-# returns the starpar disctionary
-def getstarpar(par, data, star, hr):
+# returns the starpar dictionary
+def get_starpar(par, data, star, hr):
     date = datecorrect(data["cubepar"]["date"])
     time = Time(date, format='isot')
     jd = time.jd
@@ -62,19 +60,19 @@ if __name__ == "__main__":
     print("Parameter file: " + parfile)
     datafile = sys.argv[2]
 
-    par = read_json(parfile)
-    data = read_json(datafile)
-    starcat = read_json(par["profrest"]["starcat"])
+    paramaters = read_json(parfile)
+    data_dict = read_json(datafile)
+    starcat_dict = read_json(paramaters["profrest"]["starcat"])
 
     # data["cubepar"]["star"] = '1903'  # patch
     # finds, returns list of 4 floats (ra,dec,V,B-V)
-    hr = data["cubepar"]["star"]
-    star = getstar(hr, starcat)
+    hr = data_dict["cubepar"]["star"]
+    star = get_star(hr, starcat_dict)
     if star[0] > 0:
-        starpar = getstarpar(par, data, star, hr)
+        starpar = get_starpar(paramaters, data_dict, star, hr)
         # print(starpar)
     else:
         starpar = 'none'
-    data["starpar"] = starpar
-    json.dump(data, codecs.open(datafile, 'w', encoding='utf-8'), separators=(',', ':'))
+    data_dict["starpar"] = starpar
+    json.dump(data_dict, codecs.open(datafile, 'w', encoding='utf-8'), separators=(',', ':'))
     print("Star parameters saved in " + datafile)

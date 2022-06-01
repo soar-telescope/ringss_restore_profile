@@ -25,7 +25,7 @@ import zernike
 
 
 def aweight(z, mmax, d, eps, pdist, wav, sp, drho=1.5, pixel=0, zn=[], zrad=[]):
-    # Computing paramters
+    # Computing parameters
     nsect = 8  # number of sectors for radial weight
     ngrid = 256  # half-size of computing grid [pix]
     ksize = 6  # grid size/telescope diameter ratio
@@ -43,7 +43,7 @@ def aweight(z, mmax, d, eps, pdist, wav, sp, drho=1.5, pixel=0, zn=[], zrad=[]):
     size = d * ksize  # domain size in pupil plane, [m]
     asperpix = 206265. * lam0 / size  # fine-pixel in the image plane [arcsec]
     fstep = 1. / size  # frequency step [1/m]
-    xstep = size / (2 * ngrid)  # pixel in the pupil plane
+    # xstep = size / (2 * ngrid)  # pixel in the pupil plane
     ringradpix = 0.85 * d * (1. + eps) / (4. * pdist) * 206265. / asperpix  # ring radius in fine pixels
     if ringradpix > 0.8 * ngrid:
         print("Error: ring too wide, returning!")

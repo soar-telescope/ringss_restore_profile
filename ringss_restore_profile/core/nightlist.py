@@ -3,9 +3,8 @@
 
 import sys
 import os
-import json
 
-from .core import read_json
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 # ### Main module. usage: > python <par> <data>

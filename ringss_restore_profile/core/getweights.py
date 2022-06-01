@@ -1,11 +1,11 @@
 # coding: utf-8
 
-# import matplotlib.pyplot as plt
 import numpy as np
 import json
 import codecs
 import sys
 import aweight
+from ringss_restore_profile.restore_profile.core import read_json
 
 
 # Return blackbody spectrum with arbitrary normalization, photons/lambda
@@ -20,7 +20,7 @@ def blackbody(wav, temp):
 def getucoef(ufunc, z, mm):
     nm = len(mm)
     nz = z.shape[0]  # number of layers
-    amat = np.zeros((nm, nz))  # Matrix of the inear-equations system
+    amat = np.zeros((nm, nz))  # Matrix of the linear-equations system
     wz = z * 1e-3 + 0.5  # distance-dependent weight for response calc.
     for i in range(0, nm):
         amat[i, :] = ufunc[:, mm[i]] * wz
@@ -34,18 +34,6 @@ def getucoef(ufunc, z, mm):
         uresp = uresp + ucoef[i] * ufunc[:, mm[i]]
     # plt.plot(z,uresp)
     return ucoef, uresp
-
-
-# read parameters, return the dictionary <par>
-def getpar(parfile):
-    try:
-        file = open(parfile, "r")
-        par = json.load(file)  # par is a nested dictionary
-    except FileNotFoundError as err:
-        print(err)
-        quit()
-    file.close()
-    return par
 
 
 def computeweight(par):  # actual weight calculation
@@ -94,7 +82,7 @@ def computeweight(par):  # actual weight calculation
     weight = {"z": z.tolist(), "wt0": wt0.tolist(), "wtslope": wtslope.tolist(), "ucoef0": ucoef0.tolist(),
               "ucoefslope": ucoefslope.tolist(), "umm": mm, "lameff": lameff}
 
-    json_output_file = par["profrest"]["weightfile"]
+    json_output_file = par["profrest"]["weightsfile"]
     try:
         json.dump(weight, codecs.open(json_output_file, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True,
                   indent=4)
@@ -103,17 +91,17 @@ def computeweight(par):  # actual weight calculation
     print("Saved weights in " + json_output_file)
 
 
-# ### End of getweight module
+# ### End of getweights module
 
 
 # ### Main module. usage: > python <par> <data>
 # ---------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python getweight5.py <par-file> ")
+        print("Usage: python getweights.py <par-file.json> ")
         sys.exit()
 
-    parfile = sys.argv[1]
-    print("Parameter file: " + parfile)
-    par = getpar(parfile)
-    computeweight(par)
+    parameters_filename = sys.argv[1]
+    print("Parameter file: " + parameters_filename)
+    parameters = read_json(parameters_filename)
+    computeweight(parameters)
